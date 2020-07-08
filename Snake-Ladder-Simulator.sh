@@ -4,6 +4,7 @@
 PlayerOnePosition=0
 WinningPosition=100
 Start=0
+CountRollDice=0
 RollDice(){
 	local Roll=$((RANDOM%6+1))
 	echo $Roll
@@ -51,8 +52,8 @@ PlayeroneGame(){
 	do  
 		CurrentPosition=$(MovePlayer $CurrentPosition)
 		echo "CurrentPosition" : $CurrentPosition
+                        ((CountRollDice++))
 	done
-	echo "Player wins!"
-
+	echo "Player wins!"  "CountRollDice": $CountRollDice
 }
 PlayeroneGame
