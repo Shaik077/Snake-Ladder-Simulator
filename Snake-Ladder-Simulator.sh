@@ -1,8 +1,8 @@
 #!/bin/bash -x
 
 
-PlayerOnePosition=0
-PlayerTwoPosition=0
+CurrentPositionPlayerOne=0
+CurrentPositionPlayerTwo=0
 WinningPosition=100
 Start=0
 CountRollDice=0
@@ -47,35 +47,37 @@ MovePlayer(){
          fi
 	echo $CurrentPosition
 }
-PlayeroneGame(){
-	local CurrentPosition=$1
-	while [[ $CurrentPosition -lt $WinningPosition ]]
-	do  
-		CurrentPosition=$(MovePlayer $CurrentPosition)
-		echo "CurrentPosition" : $CurrentPosition
-                        ((CountRollDice++))
-	done
-	echo "Player wins!"  "CountRollDice": $CountRollDice
-}
-TwoPlayerGame(){
-        local player1=$1 
-	local player2=$2
-	while [ $player2 -ne 100 ]
-	do  
-		player1=$(MovePlayer $player1)
-		echo "Player1 position = $player1"
-		if [ $player1 -eq 100 ]
-		then
-			break
-		fi
-		player2=$(MovePlayer $player2)
-		echo "Player2 position = $player2"
-	done
-	if [ $player1 -eq 100 ]
+
+TwoPlayers()
+{
+	while [[ $CurrentPositionPlayerOne -lt $WinningPosition ]] && [[ $CurrentPositionPlayerTwo -lt $WinningPosition ]]
+   do
+       Chance=$((PlayerChance%2))
+	if(($Chance==0))
 	then
-		echo "Player1 wins"
-	else
-		echo "Player2 wins"
-	fi
+             CurrentPositionPlayerOne=$(MovePlayer $CurrentPositionPlayerOne)
+             echo "CurrentPositionPlayerOne":$CurrentPositionPlayerOne
+                     ((CountRollDice++))
+         else
+             CurrentPositionPlayerTwo=$(MovePlayer $CurrentPositionPlayerTwo)
+             echo "CurrentPositionPlayerTwo":$CurrentPositionPlayerTwo
+                            ((CountRollDice++))
+          fi
+        PlayerChance=$((PlayerChance+1))
+   done
 }
-TwoPlayerGame "PlayerOnePosition" :$PlayerOnePosition   "PlayerTwoPosition": $PlayerTwoPosition
+
+function WhoWin()
+{
+      TwoPlayers
+        if [[ $CurrentPositionPlayerOne -eq $WinningPosition ]]
+      then
+         echo "PlayerOneWon "
+      break
+      else
+         echo "PlayerTwoWon "
+      break
+      fi
+}
+WhoWin
+echo "CountRollDice": $CountRollDice
