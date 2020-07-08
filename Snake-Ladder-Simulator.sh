@@ -2,6 +2,7 @@
 
 
 PlayerOnePosition=0
+PlayerTwoPosition=0
 WinningPosition=100
 Start=0
 CountRollDice=0
@@ -56,4 +57,25 @@ PlayeroneGame(){
 	done
 	echo "Player wins!"  "CountRollDice": $CountRollDice
 }
-PlayeroneGame
+TwoPlayerGame(){
+        local player1=$1 
+	local player2=$2
+	while [ $player2 -ne 100 ]
+	do  
+		player1=$(MovePlayer $player1)
+		echo "Player1 position = $player1"
+		if [ $player1 -eq 100 ]
+		then
+			break
+		fi
+		player2=$(MovePlayer $player2)
+		echo "Player2 position = $player2"
+	done
+	if [ $player1 -eq 100 ]
+	then
+		echo "Player1 wins"
+	else
+		echo "Player2 wins"
+	fi
+}
+TwoPlayerGame "PlayerOnePosition" :$PlayerOnePosition   "PlayerTwoPosition": $PlayerTwoPosition
