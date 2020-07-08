@@ -3,6 +3,7 @@
 
 PlayerOnePosition=0
 WinningPosition=100
+Start=0
 RollDice(){
 	local Roll=$((RANDOM%6+1))
 	echo $Roll
@@ -32,20 +33,24 @@ PlayOptions(){
 PlayOptions
 MovePlayer(){
 	local CurrentPosition=$1
+        PreviousValue=$CurrentPosition
 	local Move=$(PlayOptions)
 	CurrentPosition=$(($CurrentPosition+$Move))
-	if [ $CurrentPosition -lt 0 ]
+	if [ $CurrentPosition -lt $Start ]
 	then
 		CurrentPosition=0
+        elif [ $CurrentPosition -gt $WinningPosition ]
+          then
+                CurrentPosition=$PreviousValue
          fi
 	echo $CurrentPosition
 }
 PlayeroneGame(){
 	local CurrentPosition=$1
-	while [[ $CurrentPosition -ne $WinningPosition ]]
+	while [[ $CurrentPosition -lt $WinningPosition ]]
 	do  
 		CurrentPosition=$(MovePlayer $CurrentPosition)
-		echo $CurrentPosition
+		echo "CurrentPosition" : $CurrentPosition
 	done
 	echo "Player wins!"
 
